@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.Windows;
 
 public class VirtualCVCamera : MonoBehaviour
 {
-    Camera cam = null;
-    // Start is called before the first frame update
-    string screenshotPath = "";
-    Texture2D cameraImage = null;
+    private Camera cam = null;
+    private Texture2D cameraImage = null;
 
-    int screenshotIndex = 0;
+    private int screenshotIndex = 0;
+    private string screenshotPath = "";
+
+    private FFMPEGExecutor ffmpeg = null;
+    private PythonExecutor python = null;
+
     void Start()
     {
         Debug.Log("Start VirtualCVCamera");
@@ -19,7 +21,13 @@ public class VirtualCVCamera : MonoBehaviour
         cameraImage= new Texture2D(cam.targetTexture.width, cam.targetTexture.height, TextureFormat.RGB24, false);
 
         screenshotPath = Path.Combine(Application.dataPath, "..", "Screenshot");
-        UnityEngine.Windows.Directory.CreateDirectory(screenshotPath);
+        Directory.CreateDirectory(screenshotPath);
+        Debug.Log("Screenshot path : " + screenshotPath);
+
+        ffmpeg = new FFMPEGExecutor();
+        ffmpeg.Initialze();
+
+        python = new PythonExecutor();
     }
 
     // Update is called once per frame
@@ -27,11 +35,11 @@ public class VirtualCVCamera : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.F12))
         {
-            takeScreenshot();
+            TakeScreenshot();
         }
     }
 
-    void takeScreenshot()
+    void TakeScreenshot()
     {
         if (cam == null || cameraImage == null) return;
 
