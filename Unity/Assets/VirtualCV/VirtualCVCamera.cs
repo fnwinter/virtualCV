@@ -26,6 +26,7 @@ public class VirtualCVCamera : MonoBehaviour
 
         ffmpeg = new FFMPEGExecutor();
         ffmpeg.Initialze();
+        ffmpeg.ExecuteFFMPEG();
 
         python = new PythonExecutor();
     }
@@ -33,7 +34,7 @@ public class VirtualCVCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.F12))
+        //if (Input.GetKey(KeyCode.F12))
         {
             TakeScreenshot();
         }
@@ -52,9 +53,11 @@ public class VirtualCVCamera : MonoBehaviour
         RenderTexture.active = rendText;
 
         byte[] bytes = cameraImage.EncodeToJPG();
+        //char[] cArray = System.Text.Encoding.ASCII.GetString(bytes).ToCharArray();
+        if (ffmpeg != null && ffmpeg.myStreamWriter != null) ffmpeg.myStreamWriter.BaseStream.Write(bytes, 0, bytes.Length);
 
-        screenshotIndex++;
-        string screenshotFileName = Path.Combine(screenshotPath, string.Format("Screenshot_{0}.jpg", screenshotIndex));
-        System.IO.File.WriteAllBytes(screenshotFileName, bytes);
+        //screenshotIndex++;
+        //string screenshotFileName = Path.Combine(screenshotPath, string.Format("Screenshot_{0}.jpg", screenshotIndex));
+        //System.IO.File.WriteAllBytes(screenshotFileName, bytes);
     }
 }
