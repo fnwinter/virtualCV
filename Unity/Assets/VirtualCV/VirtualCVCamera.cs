@@ -11,36 +11,40 @@ public class VirtualCVCamera : MonoBehaviour
     private int screenshotIndex = 0;
     private string screenshotPath = "";
 
-    private FFMPEGExecutor ffmpeg = null;
-    private PythonExecutor python = null;
+    private FFMPEGExecutor ffmpegExecutor = null;
+    private PythonExecutor pythonExecutor = null;
 
     void Start()
     {
-        Debug.Log("Start VirtualCVCamera");
+        Debug.Log("VirtualCVCamera starts");
         cam = GetComponent<Camera>();
         cameraImage= new Texture2D(cam.targetTexture.width, cam.targetTexture.height, TextureFormat.RGB24, false);
 
         screenshotPath = Path.Combine(Application.dataPath, "..", "Screenshot");
         Directory.CreateDirectory(screenshotPath);
-        Debug.Log("Screenshot path : " + screenshotPath);
 
-        ffmpeg = new FFMPEGExecutor();
-        ffmpeg.Initialze();
-        ffmpeg.ExecuteFFMPEG();
+        ffmpegExecutor = new FFMPEGExecutor();
+        ffmpegExecutor.Initialze();
+        ffmpegExecutor.ExecuteFFMPEG();
 
-        python = new PythonExecutor();
+        pythonExecutor = new PythonExecutor();
+        pythonExecutor.Initialze();
+        pythonExecutor.ExecutePython();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKey(KeyCode.F12))
+        UpdateRenderTexture();
+        UpdateToFFMPEG();
+
+        if (Input.GetKeyUp(KeyCode.F12))
         {
             TakeScreenshot();
         }
     }
 
-    void TakeScreenshot()
+    void UpdateRenderTexture()
     {
         if (cam == null || cameraImage == null) return;
 
@@ -51,13 +55,21 @@ public class VirtualCVCamera : MonoBehaviour
         cameraImage.ReadPixels(new Rect(0, 0, cam.targetTexture.width, cam.targetTexture.height), 0, 0);
         cameraImage.Apply();
         RenderTexture.active = rendText;
+    }
 
-        byte[] bytes = cameraImage.EncodeToJPG();
-        //char[] cArray = System.Text.Encoding.ASCII.GetString(bytes).ToCharArray();
-        if (ffmpeg != null && ffmpeg.myStreamWriter != null) ffmpeg.myStreamWriter.BaseStream.Write(bytes, 0, bytes.Length);
+    void UpdateToFFMPEG()
+    {
+        if (ffmpegExecutor == null || cameraImage == null) return;
 
-        //screenshotIndex++;
-        //string screenshotFileName = Path.Combine(screenshotPath, string.Format("Screenshot_{0}.jpg", screenshotIndex));
-        //System.IO.File.WriteAllBytes(screenshotFileName, bytes);
+        byte[] imageData = cameraImage.EncodeToJPG();
+        if (ffmpegExecutor.ffmpegStreamWriter != null) ffmpegExecutor.ffmpegStreamWriter.BaseStream.Write(imageData, 0, imageData.Length);
+    }
+
+    void TakeScreenshot()
+    {
+        screenshotIndex++;
+        string screenshotFileName = Path.Combine(screenshotPath, string.Format("Screenshot_{0}.jpg", screenshotIndex));
+        Debug.Log("Screenshot saved : path - " + screenshotFileName);
+        File.WriteAllBytes(screenshotFileName, cameraImage.EncodeToJPG());
     }
 }

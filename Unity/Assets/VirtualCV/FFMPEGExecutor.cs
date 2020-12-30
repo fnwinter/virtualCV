@@ -1,41 +1,34 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.ComponentModel;
+﻿using System.IO;
+using SysDiagnostics = System.Diagnostics;
 using UnityEngine;
 
 public class FFMPEGExecutor
 {
-    public StreamWriter myStreamWriter = null;
-    public System.Diagnostics.Process myProcess = new System.Diagnostics.Process();
-    public string ffmpegPath;
+    private SysDiagnostics.Process ffmpegProcess = new SysDiagnostics.Process();
+    private string ffmpegPath = "";
 
-    // Start is called before the first frame update
+    public StreamWriter ffmpegStreamWriter = null;
+
     public void Initialze()
     {
         Debug.Log("Start FFMPEGExecutor");
-        ffmpegPath= Path.Combine(Application.streamingAssetsPath, "ffmpeg", "bin");
-        Debug.Log("FFMPEG path : " + ffmpegPath);
+        ffmpegPath = Path.Combine(Application.streamingAssetsPath, "ffmpeg", "bin");
+        Debug.Log("ffmpeg path : " + ffmpegPath);
     }
 
     public void ExecuteFFMPEG()
     {
         Debug.Log("Execute ffmpeg");
-        myProcess.StartInfo.FileName = ffmpegPath + "\\ffmpeg.exe";
-        myProcess.StartInfo.Arguments = "-re -stream_loop -1 -i pipe: -c:v libx264 -vf \"fps = 60\" -c:v libx264 -f mpegts udp://127.0.0.1:1234";
-        myProcess.StartInfo.WorkingDirectory = ffmpegPath;
-        myProcess.StartInfo.UseShellExecute = false;
-        myProcess.StartInfo.RedirectStandardInput = true;
-        //myProcess.StartInfo.RedirectStandardOutput = true;
+        ffmpegProcess.StartInfo.FileName = Path.Combine(ffmpegPath, "ffmpeg.exe");
+        ffmpegProcess.StartInfo.Arguments = "-re -stream_loop -1 -i pipe: -c:v libx264 -vf \"fps = 60\" -c:v libx264 -f mpegts udp://127.0.0.1:1234";
+        ffmpegProcess.StartInfo.WorkingDirectory = ffmpegPath;
+        ffmpegProcess.StartInfo.UseShellExecute = false;
+        ffmpegProcess.StartInfo.RedirectStandardInput = true;
+        ffmpegProcess.StartInfo.RedirectStandardOutput = true;
+        ffmpegProcess.StartInfo.CreateNoWindow = true;
 
-        myProcess.Start();
+        ffmpegProcess.Start();
 
-        myStreamWriter = myProcess.StandardInput;
-    }
-
-    // Update is called once per frame
-    public void Update()
-    {
-
+        ffmpegStreamWriter = ffmpegProcess.StandardInput;
     }
 }
