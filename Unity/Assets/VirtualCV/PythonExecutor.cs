@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 using SysDiagnostics = System.Diagnostics;
 
@@ -13,7 +14,7 @@ public class PythonExecutor
     public void Initialze(string scriptFile = "opencv.py")
     {
         pythonScriptPath = Path.Combine(Application.streamingAssetsPath, "python");
-        Debug.Log("python script path : " + pythonScriptPath);
+        Debug.Log("Python script path : " + pythonScriptPath);
         pythonScriptFile = scriptFile;
     }
 

@@ -61,7 +61,7 @@ public class VirtualCVCamera : MonoBehaviour
     {
         if (ffmpegExecutor == null || cameraImage == null) return;
 
-        byte[] imageData = cameraImage.EncodeToJPG();
+        byte[] imageData = cameraImage.EncodeToPNG();
         if (ffmpegExecutor.ffmpegStreamWriter != null) ffmpegExecutor.ffmpegStreamWriter.BaseStream.Write(imageData, 0, imageData.Length);
     }
 
