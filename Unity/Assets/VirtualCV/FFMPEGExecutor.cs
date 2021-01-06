@@ -19,8 +19,21 @@ public class FFMPEGExecutor
     public void ExecuteFFMPEG()
     {
         Debug.Log("Execute ffmpeg");
+        string[] ffmpegOptions =
+        {
+            "-re",
+            "-stream_loop", "-1",
+            "-i", "pipe:",
+            "-c:v", "png",
+            "-vf", "\"fps=60\"",
+            "-c:v", "libx264",
+            "-preset", "veryfast",
+            "-f", "mpegts",
+            "udp://127.0.0.1:1234"
+        };
+
         ffmpegProcess.StartInfo.FileName = Path.Combine(ffmpegPath, "ffmpeg.exe");
-        ffmpegProcess.StartInfo.Arguments = "-re -stream_loop -1 -i pipe: -c:v png -vf \"fps = 60\" -c:v libx264 -preset veryfast -f mpegts udp://127.0.0.1:1234";
+        ffmpegProcess.StartInfo.Arguments = string.Join(" ", ffmpegOptions);
         ffmpegProcess.StartInfo.WorkingDirectory = ffmpegPath;
         ffmpegProcess.StartInfo.UseShellExecute = false;
         ffmpegProcess.StartInfo.RedirectStandardInput = true;
