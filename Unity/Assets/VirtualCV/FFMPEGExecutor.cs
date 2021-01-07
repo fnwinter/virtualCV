@@ -8,6 +8,7 @@ public class FFMPEGExecutor
     private string ffmpegPath = "";
 
     public StreamWriter ffmpegStreamWriter = null;
+    private int FPS = 60;
 
     public void Initialze()
     {
@@ -19,16 +20,19 @@ public class FFMPEGExecutor
     public void ExecuteFFMPEG()
     {
         Debug.Log("Execute ffmpeg");
+        string fps = string.Format("\"fps={0}\"", FPS);
+        // libx264 : mpegts
+        // jpg : mjpeg
         string[] ffmpegOptions =
         {
             "-re",
             "-stream_loop", "-1",
             "-i", "pipe:",
-            "-c:v", "png",
-            "-vf", "\"fps=60\"",
-            "-c:v", "libx264",
+            "-c:v", "jpg",
+            "-vf", fps,
+            "-c:v", "mjpeg",
             "-preset", "veryfast",
-            "-f", "mpegts",
+            "-f", "mjpeg",
             "udp://127.0.0.1:1234"
         };
 
