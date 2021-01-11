@@ -1,13 +1,16 @@
-import cv2
+# copyright by fnwinter 2021
 
-capture = cv2.VideoCapture("udp://127.0.0.1:1234")
-capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+from virtualCV.virtualCV import virtualCVWindow
 
-while True:
-    ret, frame = capture.read()
-    cv2.imshow("VideoFrame", frame)
-    if cv2.waitKey(1) == ord('q'): break
+class openCVExample(virtualCVWindow):
+    def __init__(self):
+        super().__init__(self.updateFrame)
 
-capture.release()
-cv2.destroyAllWindows()
+    def updateFrame(self, frame):
+        #print("called")
+        #print(frame)
+        pass
+
+if __name__ == '__main__':
+    example = openCVExample()
+    example.run()
