@@ -7,9 +7,7 @@ class openCVExample(virtualCVWindow):
         super().__init__(self.updateFrame)
 
     def updateFrame(self, frame):
-        #print("called")
-        #print(frame)
-        pass
+        return frame
 
 if __name__ == '__main__':
     example = openCVExample()

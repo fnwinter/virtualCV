@@ -5,30 +5,32 @@ using UnityEngine;
 
 public class VirtualCVWebSocket
 {
+    private Thread thread = null;
+    private static WebSocketServer webSocketServer = new WebSocketServer("ws://127.0.0.1:8090");
+
     public class Data : WebSocketBehavior
     {
         protected override void OnMessage(MessageEventArgs e)
         {
-            var msg = e.Data == "BALUS"
-                      ? "I've been balused already..."
-                      : "I'm not available now.";
-
-            Send(msg);
+            Send(e.Data);
         }
     }
 
-    public static void ThreadProc()
+    public static void WebSocketProc()
     {
-        Debug.Log("ThreadProc");
-        var wssv = new WebSocketServer("ws://127.0.0.1:8090");
-        wssv.AddWebSocketService<Data>("/Data");
-        wssv.Start();
-        
+        Debug.Log("Start WebSocket Server");
+        webSocketServer.AddWebSocketService<Data>("/Data");
+        webSocketServer.Start();
+    }
+
+    public static WebSocketServer getWebsocket()
+    {
+        return webSocketServer;
     }
 
     public void Initialize()
     {
-        Thread t = new Thread(new ThreadStart(ThreadProc));
-        t.Start();
+        thread = new Thread(new ThreadStart(WebSocketProc));
+        thread.Start();
     }
 }
