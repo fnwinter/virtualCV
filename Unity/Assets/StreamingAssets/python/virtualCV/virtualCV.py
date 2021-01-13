@@ -3,6 +3,8 @@
 import cv2
 import tkinter as tk
 
+from .virtualCVSocket import virtualCVSocket
+
 from PIL import ImageTk, Image
 
 class virtualCVFrame(tk.Frame):
@@ -63,15 +65,21 @@ class virtualCVFrame(tk.Frame):
         self.callback = callback
 
 class virtualCVWindow():
-    def __init__(self, callback):
+    def __init__(self, frameCallback, dataCallback):
         self.root = tk.Tk()
         self.root.title("virtualCV")
         self.root.geometry("650x490+0+0")
         self.root.resizable(False, False)
         self.app = virtualCVFrame(master=self.root)
-        self.app.setFrameCallback(callback)
+        self.app.setFrameCallback(frameCallback)
 
-        self.socket = virtualCVSocket
+        self.socket = virtualCVSocket()
+        self.socket.start()
+        self.socket.setDataCallback(dataCallback)
+
+    async def sendData(self, data):
+        self.socket.sendData(data)
+        pass
 
     def run(self):
         self.root.mainloop()
