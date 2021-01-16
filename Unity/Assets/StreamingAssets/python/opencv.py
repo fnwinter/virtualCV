@@ -7,11 +7,10 @@ class openCVExample(virtualCVWindow):
         super().__init__(self.updateFrame, self.recvData)
 
     def updateFrame(self, frame):
-        self.sendData("test")
         return frame
 
-    async def recvData(self, data):
-        await self.sendData("test")
+    def recvData(self, data):
+        self.sendData("send data")
 
 if __name__ == '__main__':
     example = openCVExample()

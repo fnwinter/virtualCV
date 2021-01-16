@@ -70,6 +70,7 @@ class virtualCVWindow():
         self.root.title("virtualCV")
         self.root.geometry("650x490+0+0")
         self.root.resizable(False, False)
+        self.root.protocol("WM_DELETE_WINDOW", self.onClose)
         self.app = virtualCVFrame(master=self.root)
         self.app.setFrameCallback(frameCallback)
 
@@ -77,9 +78,12 @@ class virtualCVWindow():
         self.socket.start()
         self.socket.setDataCallback(dataCallback)
 
-    async def sendData(self, data):
+    def sendData(self, data):
         self.socket.sendData(data)
-        pass
 
     def run(self):
         self.root.mainloop()
+
+    def onClose(self):
+        print("window closed")
+        self.socket.stop()

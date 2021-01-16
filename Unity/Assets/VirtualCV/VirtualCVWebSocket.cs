@@ -12,8 +12,7 @@ public class VirtualCVWebSocket
     {
         protected override void OnMessage(MessageEventArgs e)
         {
-            Send(e.Data + "test");
-            Debug.Log(e.Data);
+
         }
     }
 
