@@ -7,9 +7,15 @@ public class VirtualCVWebSocket
 {
     private Thread thread = null;
     private static WebSocketServer webSocketServer = new WebSocketServer("ws://127.0.0.1:8090");
+    private static Data data = null;
 
     public class Data : WebSocketBehavior
     {
+        public Data()
+        {
+            VirtualCVWebSocket.data = this;
+        }
+
         protected override void OnMessage(MessageEventArgs e)
         {
 

@@ -11,16 +11,11 @@ public class PythonExecutor
     private string pythonScriptPath = "";
     private string pythonScriptFile = "";
 
-    private VirtualCVWebSocket socket = null;
-
     public void Initialze(string scriptFile = "opencv.py")
     {
         pythonScriptPath = Path.Combine(Application.streamingAssetsPath, "python");
         Debug.Log("Python script path : " + pythonScriptPath);
         pythonScriptFile = scriptFile;
-
-        socket = new VirtualCVWebSocket();
-        socket.Initialize();
     }
 
     public void ExecutePython()

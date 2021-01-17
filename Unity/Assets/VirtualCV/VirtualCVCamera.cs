@@ -13,6 +13,7 @@ public class VirtualCVCamera : MonoBehaviour
 
     private FFMPEGExecutor ffmpegExecutor = null;
     private PythonExecutor pythonExecutor = null;
+    private VirtualCVWebSocket socket = null;
 
     void Start()
     {
@@ -30,6 +31,9 @@ public class VirtualCVCamera : MonoBehaviour
         pythonExecutor = new PythonExecutor();
         pythonExecutor.Initialze();
         pythonExecutor.ExecutePython();
+
+        socket = new VirtualCVWebSocket();
+        socket.Initialize();
     }
 
     // Update is called once per frame
@@ -66,6 +70,7 @@ public class VirtualCVCamera : MonoBehaviour
         {
             ffmpegExecutor.ffmpegStreamWriter.BaseStream.Write(imageData, 0, imageData.Length);
         }
+
     }
 
     void TakeScreenshot()

@@ -12,16 +12,23 @@ class virtualCVSocket(Thread):
 
     def run(self):
         self.websocket = create_connection("ws://127.0.0.1:8090/Data")
-        while self.running and self.websocket.connected:
-            r, _, e = select.select([self.websocket.sock], [], [])
-            data =  self.websocket.recv()
+        if not self.websocket: return
+        if not self.websocket.connected: return
+        if not self.callback: return
+
+        timeout = 10 # 10 seconds
+        while self.running:
+            r, _, _ = select.select([self.websocket.sock], [], [], timeout)
+
+            if len(r) == 0: break
+            data = self.websocket.recv()
             if data:
                 self.callback(data)
         self.websocket.close()
 
     def stop(self):
         self.running = False
-        self.websocket.send("closed")
+        self.websocket.send("VirtualCVSocket closed")
 
     def setDataCallback(self, dataCallback):
         self.callback = dataCallback
