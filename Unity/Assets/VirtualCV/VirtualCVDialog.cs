@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿/*!
+ * Copyright (c) 2021 fnwinter@gmail.com All rights reserved.
+ * Licensed under the MIT License.
+ */
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;

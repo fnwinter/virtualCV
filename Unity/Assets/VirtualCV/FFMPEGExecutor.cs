@@ -1,4 +1,9 @@
-﻿using System.IO;
+﻿/*!
+ * Copyright (c) 2021 fnwinter@gmail.com All rights reserved.
+ * Licensed under the MIT License.
+ */
+
+using System.IO;
 using SysDiagnostics = System.Diagnostics;
 using UnityEngine;
 
