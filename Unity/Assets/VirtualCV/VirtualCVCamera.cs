@@ -17,7 +17,6 @@ public class VirtualCVCamera : MonoBehaviour
     private string screenshotPath = "";
 
     private FFMPEGExecutor ffmpegExecutor = null;
-    private PythonExecutor pythonExecutor = null;
     private VirtualCVWebSocket socket = null;
 
     void Start()
@@ -33,9 +32,7 @@ public class VirtualCVCamera : MonoBehaviour
         ffmpegExecutor.Initialze();
         ffmpegExecutor.ExecuteFFMPEG();
 
-        pythonExecutor = new PythonExecutor();
-        pythonExecutor.Initialze();
-        pythonExecutor.ExecutePython();
+        PythonExecutor.getInstance().ExecutePython("opencv.py");
 
         socket = new VirtualCVWebSocket();
         socket.Initialize();

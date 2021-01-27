@@ -13,22 +13,38 @@ using SysDiagnostics = System.Diagnostics;
 public class PythonExecutor
 {
     private SysDiagnostics.Process pythonProcess = new SysDiagnostics.Process();
-    private string pythonScriptPath = "";
+    private string pythonScriptPath = Path.Combine(Application.streamingAssetsPath, "python");
     private string pythonScriptFile = "";
 
-    public void Initialze(string scriptFile = "opencv.py")
+    private static PythonExecutor executor = null;
+
+    /// <summary>
+    /// Get python executor instance
+    /// </summary>
+    /// <returns></returns>
+    public static PythonExecutor getInstance()
     {
-        pythonScriptPath = Path.Combine(Application.streamingAssetsPath, "python");
-        Debug.Log("Python script path : " + pythonScriptPath);
-        pythonScriptFile = scriptFile;
+        return (executor ?? new PythonExecutor());
     }
 
-    public void ExecutePython()
+    /// <summary>
+    /// Return python folder path
+    /// </summary>
+    public string GetPythonFolderPath()
     {
-        Debug.Log("Execute python script");
+        return pythonScriptPath;
+    }
+
+    /// <summary>
+    /// Execute python script
+    /// </summary>
+    /// <param name="scriptFile">python script file name, default is opencv.py</param>
+    public void ExecutePython(string pythonScriptFile)
+    {
+        Debug.Log("[virtualCV] Execute python script");
         pythonProcess.StartInfo.FileName = "python.exe";
         pythonProcess.StartInfo.WorkingDirectory = pythonScriptPath;
-        pythonProcess.StartInfo.Arguments = "opencv.py";
+        pythonProcess.StartInfo.Arguments = pythonScriptFile;
         pythonProcess.StartInfo.UseShellExecute = false;
         pythonProcess.StartInfo.RedirectStandardOutput = true;
         pythonProcess.StartInfo.CreateNoWindow = true;

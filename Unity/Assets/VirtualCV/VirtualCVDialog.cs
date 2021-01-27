@@ -5,6 +5,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEditor;
 
@@ -21,12 +22,15 @@ public class VirtualCVSetUp : EditorWindow
     float focal_length = 10.0f;
     float ipd = 0.1f;
 
+    private static string[] pythonFiles = VirtualCVSetUp.GetPythonScripts();
+
     // Add menu named "My Window" to the Window menu
     [MenuItem("virtualCV/Setup")]
     static void Init()
     {
         // Get existing open window or if none, make a new one:
         VirtualCVSetUp window = (VirtualCVSetUp)EditorWindow.GetWindow(typeof(VirtualCVSetUp));
+
         window.Show();
     }
 
@@ -61,11 +65,30 @@ public class VirtualCVSetUp : EditorWindow
         EditorGUILayout.Space();
 
         int selected = 0;
-        string[] options = new string[]
-        {
-            "Option1", "Option2", "Option3",
-        };
-        selected = EditorGUILayout.Popup("Python script", selected, options);
+        selected = EditorGUILayout.Popup("Python script", selected, pythonFiles);
         GUILayout.Button("Launch the script");
+    }
+
+    /// <summary>
+    /// Get python script names
+    /// </summary>
+    /// <returns></returns>
+    private static string[] GetPythonScripts()
+    {
+        string pythonFolderPath = PythonExecutor.getInstance().GetPythonFolderPath();
+
+        string[] pythonFiles = Directory.GetFiles(pythonFolderPath);
+
+        List<string> pythonFileList = new List<string>();
+        foreach (string fileName in pythonFiles)
+        {
+            if (fileName.EndsWith(".py"))
+            {
+                string onlyFileName = Path.GetFileName(fileName);
+                pythonFileList.Add(onlyFileName);
+            }
+        }
+            
+        return pythonFileList.ToArray();
     }
 }
