@@ -9,27 +9,33 @@ using System.IO;
 using UnityEngine;
 using UnityEditor;
 
-public class VirtualCVSetUp : EditorWindow
+
+public struct VirtualCVParams
 {
-    bool usePhysicalCamera = false;
-    bool useDepthCameara = false;
-    bool useStereoCamera = false;
+    public bool usePhysicalCamera;
+    public bool useDepthCameara;
+    public bool useStereoCamera;
 
-    int textureWidth = 640;
-    int textureHeight = 480;
-    int fov = 90;
-    int fps = 30;
-    float focal_length = 10.0f;
-    float ipd = 0.1f;
+    public int textureWidth;
+    public int textureHeight;
+    public int fov;
+    public int fps;
+    public float focal_length;
+    public float ipd;
+}
 
-    private static string[] pythonFiles = VirtualCVSetUp.GetPythonScripts();
+public class VirtualCVDialog : EditorWindow
+{
+    private VirtualCVParams param = (new VirtualCVSettings()).LoadSettings();
+
+    private static string[] pythonFiles = GetPythonScripts();
 
     // Add menu named "My Window" to the Window menu
     [MenuItem("virtualCV/Setup")]
     static void Init()
     {
         // Get existing open window or if none, make a new one:
-        VirtualCVSetUp window = (VirtualCVSetUp)EditorWindow.GetWindow(typeof(VirtualCVSetUp));
+        VirtualCVDialog window = (VirtualCVDialog)EditorWindow.GetWindow(typeof(VirtualCVDialog));
 
         window.Show();
     }
@@ -38,41 +44,49 @@ public class VirtualCVSetUp : EditorWindow
     {
         GUILayout.Label("Camera settings", EditorStyles.boldLabel);
 
-        usePhysicalCamera = EditorGUILayout.Toggle("Use physical camera", usePhysicalCamera);
-        useDepthCameara = EditorGUILayout.Toggle("Use depth camera", useDepthCameara);
+        param.usePhysicalCamera = EditorGUILayout.Toggle("Use physical camera", param.usePhysicalCamera);
+        param.useDepthCameara = EditorGUILayout.Toggle("Use depth camera", param.useDepthCameara);
 
         EditorGUILayout.Space();
 
-        textureWidth = EditorGUILayout.IntField("Texture width", textureWidth);
-        textureHeight = EditorGUILayout.IntField("Texture height", textureHeight);
+        param.textureWidth = EditorGUILayout.IntField("Texture width", param.textureWidth);
+        param.textureHeight = EditorGUILayout.IntField("Texture height", param.textureHeight);
 
         EditorGUILayout.Space();
 
-        fov = EditorGUILayout.IntField("FOV", fov);
-        fps = EditorGUILayout.IntField("FPS", fps);
-        focal_length = EditorGUILayout.FloatField("Focal length", focal_length);
+        param.fov = EditorGUILayout.IntField("FOV", param.fov);
+        param.fps = EditorGUILayout.IntField("FPS", param.fps);
+        param.focal_length = EditorGUILayout.FloatField("Focal length", param.focal_length);
 
         EditorGUILayout.Space();
 
-        useStereoCamera = EditorGUILayout.Toggle("Use stereo camera", useStereoCamera);
-        ipd = EditorGUILayout.FloatField("Interpupillary distance", ipd);
+        param.useStereoCamera = EditorGUILayout.Toggle("Use stereo camera", param.useStereoCamera);
+        param.ipd = EditorGUILayout.FloatField("Interpupillary distance", param.ipd);
 
         EditorGUILayout.Space();
 
-        GUILayout.Button("Save settings");
+        if (GUILayout.Button("Save settings"))
+        {
+            Debug.Log("[Saved]");
+            new VirtualCVSettings().SaveSettings(param);
+        }
         GUILayout.Button("Apply to camera");
 
         EditorGUILayout.Space();
 
         int selected = 0;
         selected = EditorGUILayout.Popup("Python script", selected, pythonFiles);
-        GUILayout.Button("Launch the script");
+        if (GUILayout.Button("Launch the script"))
+        {
+            string fileName = pythonFiles[selected];
+            PythonExecutor.getInstance().ExecutePython(fileName);
+        }
     }
 
     /// <summary>
     /// Get python script names
     /// </summary>
-    /// <returns></returns>
+    /// <returns>python scripts in StreamingAssets</returns>
     private static string[] GetPythonScripts()
     {
         string pythonFolderPath = PythonExecutor.getInstance().GetPythonFolderPath();

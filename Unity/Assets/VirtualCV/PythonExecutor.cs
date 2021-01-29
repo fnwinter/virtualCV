@@ -3,28 +3,27 @@
  * Licensed under the MIT License.
  */
 
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using UnityEngine;
 using SysDiagnostics = System.Diagnostics;
 
 public class PythonExecutor
 {
     private SysDiagnostics.Process pythonProcess = new SysDiagnostics.Process();
-    private string pythonScriptPath = Path.Combine(Application.streamingAssetsPath, "python");
-    private string pythonScriptFile = "";
+
+    internal const string pythonExe = "python.exe";
+    internal const string pythonPath = "python";
+    private string pythonScriptPath = Path.Combine(Application.streamingAssetsPath, pythonPath);
 
     private static PythonExecutor executor = null;
 
     /// <summary>
     /// Get python executor instance
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Python Executor instance</returns>
     public static PythonExecutor getInstance()
     {
-        return (executor ?? new PythonExecutor());
+        return executor ?? (executor = new PythonExecutor());
     }
 
     /// <summary>
@@ -41,8 +40,8 @@ public class PythonExecutor
     /// <param name="scriptFile">python script file name, default is opencv.py</param>
     public void ExecutePython(string pythonScriptFile)
     {
-        Debug.Log("[virtualCV] Execute python script");
-        pythonProcess.StartInfo.FileName = "python.exe";
+        Debug.Log("[virtualCV] Execute python script : " + pythonScriptFile);
+        pythonProcess.StartInfo.FileName = pythonExe;
         pythonProcess.StartInfo.WorkingDirectory = pythonScriptPath;
         pythonProcess.StartInfo.Arguments = pythonScriptFile;
         pythonProcess.StartInfo.UseShellExecute = false;
