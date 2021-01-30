@@ -72,3 +72,6 @@ crashlytics-build.properties
 
 /[Oo]utput
 /Screenshot/*
+
+virtualCVSetting.ini
+virtualCVSetting.ini.meta

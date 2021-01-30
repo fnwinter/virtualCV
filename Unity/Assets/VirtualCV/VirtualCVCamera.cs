@@ -81,7 +81,8 @@ namespace VirtualCV
         {
             screenshotIndex++;
             string screenshotFileName = Path.Combine(screenshotPath, string.Format("Screenshot_{0}.jpg", screenshotIndex));
-            Debug.Log("Screenshot saved : path - " + screenshotFileName);
+            VirtualCVLog.Log($"Screenshot saved : path - {screenshotFileName}");
+
             File.WriteAllBytes(screenshotFileName, cameraImage.EncodeToJPG());
         }
     }
