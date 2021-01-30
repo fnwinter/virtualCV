@@ -9,100 +9,86 @@ using System.IO;
 using UnityEngine;
 using UnityEditor;
 
-
-public struct VirtualCVParams
+namespace VirtualCV
 {
-    public bool usePhysicalCamera;
-    public bool useDepthCameara;
-    public bool useStereoCamera;
-
-    public int textureWidth;
-    public int textureHeight;
-    public int fov;
-    public int fps;
-    public float focal_length;
-    public float ipd;
-}
-
-public class VirtualCVDialog : EditorWindow
-{
-    private VirtualCVParams param = (new VirtualCVSettings()).LoadSettings();
-
-    private static string[] pythonFiles = GetPythonScripts();
-
-    // Add menu named "My Window" to the Window menu
-    [MenuItem("virtualCV/Setup")]
-    static void Init()
+    public class VirtualCVDialog : EditorWindow
     {
-        // Get existing open window or if none, make a new one:
-        VirtualCVDialog window = (VirtualCVDialog)EditorWindow.GetWindow(typeof(VirtualCVDialog));
+        private VirtualCVCameraParams param = (new VirtualCVSettings()).LoadSettings();
 
-        window.Show();
-    }
+        private static string[] pythonFiles = GetPythonScripts();
 
-    void OnGUI()
-    {
-        GUILayout.Label("Camera settings", EditorStyles.boldLabel);
-
-        param.usePhysicalCamera = EditorGUILayout.Toggle("Use physical camera", param.usePhysicalCamera);
-        param.useDepthCameara = EditorGUILayout.Toggle("Use depth camera", param.useDepthCameara);
-
-        EditorGUILayout.Space();
-
-        param.textureWidth = EditorGUILayout.IntField("Texture width", param.textureWidth);
-        param.textureHeight = EditorGUILayout.IntField("Texture height", param.textureHeight);
-
-        EditorGUILayout.Space();
-
-        param.fov = EditorGUILayout.IntField("FOV", param.fov);
-        param.fps = EditorGUILayout.IntField("FPS", param.fps);
-        param.focal_length = EditorGUILayout.FloatField("Focal length", param.focal_length);
-
-        EditorGUILayout.Space();
-
-        param.useStereoCamera = EditorGUILayout.Toggle("Use stereo camera", param.useStereoCamera);
-        param.ipd = EditorGUILayout.FloatField("Interpupillary distance", param.ipd);
-
-        EditorGUILayout.Space();
-
-        if (GUILayout.Button("Save settings"))
+        [MenuItem("virtualCV/Setup")]
+        static void Init()
         {
-            Debug.Log("[Saved]");
-            new VirtualCVSettings().SaveSettings(param);
+            VirtualCVDialog window = (VirtualCVDialog)EditorWindow.GetWindow(typeof(VirtualCVDialog));
+
+            window.Show();
         }
-        GUILayout.Button("Apply to camera");
 
-        EditorGUILayout.Space();
-
-        int selected = 0;
-        selected = EditorGUILayout.Popup("Python script", selected, pythonFiles);
-        if (GUILayout.Button("Launch the script"))
+        void OnGUI()
         {
-            string fileName = pythonFiles[selected];
-            PythonExecutor.getInstance().ExecutePython(fileName);
-        }
-    }
+            GUILayout.Label("Camera settings", EditorStyles.boldLabel);
 
-    /// <summary>
-    /// Get python script names
-    /// </summary>
-    /// <returns>python scripts in StreamingAssets</returns>
-    private static string[] GetPythonScripts()
-    {
-        string pythonFolderPath = PythonExecutor.getInstance().GetPythonFolderPath();
+            param.usePhysicalCamera = EditorGUILayout.Toggle("Use physical camera", param.usePhysicalCamera);
+            param.useDepthCameara = EditorGUILayout.Toggle("Use depth camera", param.useDepthCameara);
 
-        string[] pythonFiles = Directory.GetFiles(pythonFolderPath);
+            EditorGUILayout.Space();
 
-        List<string> pythonFileList = new List<string>();
-        foreach (string fileName in pythonFiles)
-        {
-            if (fileName.EndsWith(".py"))
+            param.textureWidth = EditorGUILayout.IntField("Texture width", param.textureWidth);
+            param.textureHeight = EditorGUILayout.IntField("Texture height", param.textureHeight);
+
+            EditorGUILayout.Space();
+
+            param.fov = EditorGUILayout.IntField("FOV", param.fov);
+            param.fps = EditorGUILayout.IntField("FPS", param.fps);
+            param.focal_length = EditorGUILayout.FloatField("Focal length", param.focal_length);
+
+            EditorGUILayout.Space();
+
+            param.useStereoCamera = EditorGUILayout.Toggle("Use stereo camera", param.useStereoCamera);
+            param.ipd = EditorGUILayout.FloatField("Interpupillary distance", param.ipd);
+
+            EditorGUILayout.Space();
+
+            if (GUILayout.Button("Save settings"))
             {
-                string onlyFileName = Path.GetFileName(fileName);
-                pythonFileList.Add(onlyFileName);
+                Debug.Log("[Saved]");
+                new VirtualCVSettings().SaveSettings(param);
+            }
+            GUILayout.Button("Apply to camera");
+
+            EditorGUILayout.Space();
+
+            int selected = 0;
+            selected = EditorGUILayout.Popup("Python script", selected, pythonFiles);
+            if (GUILayout.Button("Launch the script"))
+            {
+                string fileName = pythonFiles[selected];
+                PythonExecutor.getInstance().ExecutePython(fileName);
             }
         }
-            
-        return pythonFileList.ToArray();
+
+        /// <summary>
+        /// Get python script names
+        /// </summary>
+        /// <returns>python scripts in StreamingAssets</returns>
+        private static string[] GetPythonScripts()
+        {
+            string pythonFolderPath = PythonExecutor.getInstance().GetPythonFolderPath();
+
+            string[] pythonFiles = Directory.GetFiles(pythonFolderPath);
+
+            List<string> pythonFileList = new List<string>();
+            foreach (string fileName in pythonFiles)
+            {
+                if (fileName.EndsWith(".py"))
+                {
+                    string onlyFileName = Path.GetFileName(fileName);
+                    pythonFileList.Add(onlyFileName);
+                }
+            }
+
+            return pythonFileList.ToArray();
+        }
     }
 }
