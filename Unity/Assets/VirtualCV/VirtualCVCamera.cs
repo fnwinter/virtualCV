@@ -23,7 +23,7 @@ namespace VirtualCV
 
         void Start()
         {
-            Debug.Log("VirtualCVCamera starts");
+            VirtualCVLog.Log("VirtualCVCamera starts");
             cam = GetComponent<Camera>();
             cameraImage = new Texture2D(cam.targetTexture.width, cam.targetTexture.height, TextureFormat.RGB24, false);
 

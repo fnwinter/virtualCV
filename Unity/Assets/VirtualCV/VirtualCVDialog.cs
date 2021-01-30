@@ -52,7 +52,7 @@ namespace VirtualCV
 
             if (GUILayout.Button("Save settings"))
             {
-                Debug.Log("[Saved]");
+                VirtualCVLog.Log("Settings saved");
                 new VirtualCVSettings().SaveSettings(param);
             }
             GUILayout.Button("Apply to camera");

@@ -19,14 +19,13 @@ namespace VirtualCV
 
         public void Initialze()
         {
-            Debug.Log("Start FFMPEGExecutor");
             ffmpegPath = Path.Combine(Application.streamingAssetsPath, "ffmpeg", "bin");
-            Debug.Log("ffmpeg path : " + ffmpegPath);
+            VirtualCVLog.Log("ffmpeg path : " + ffmpegPath);
         }
 
         public void ExecuteFFMPEG()
         {
-            Debug.Log("Execute ffmpeg");
+            VirtualCVLog.Log("Execute ffmpeg");
             string fps = string.Format("\"fps={0}\"", FPS);
             // libx264 : mpegts
             // jpg : mjpeg
@@ -54,6 +53,11 @@ namespace VirtualCV
             ffmpegProcess.Start();
 
             ffmpegStreamWriter = ffmpegProcess.StandardInput;
+        }
+
+        public void Terminate()
+        {
+            if (ffmpegProcess != null) ffmpegProcess.Close();
         }
     }
 }

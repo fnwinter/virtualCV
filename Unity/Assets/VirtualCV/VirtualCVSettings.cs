@@ -39,12 +39,18 @@ namespace VirtualCV
             }
             catch (Exception e)
             {
-                Debug.LogError($"fail to read settings file : {e}");
+                VirtualCVLog.LogE($"fail to read settings file : {e}");
 
                 // return default parameters
                 param.usePhysicalCamera = false;
                 param.useDepthCameara = false;
                 param.useStereoCamera = false;
+                param.textureWidth = 640;
+                param.textureHeight = 480;
+                param.fov = 60;
+                param.fps = 20;
+                param.focal_length = 1.0f;
+                param.ipd = 1.0f;
             }
 
             return param;
@@ -52,17 +58,24 @@ namespace VirtualCV
 
         public void SaveSettings(VirtualCVCameraParams param)
         {
-            using (StreamWriter outputFile = new StreamWriter(settingFilePath))
+            try
             {
-                outputFile.WriteLine($"usePhysicalCamera={param.usePhysicalCamera}");
-                outputFile.WriteLine($"useDepthCameara={param.useDepthCameara}");
-                outputFile.WriteLine($"useStereoCamera={param.useStereoCamera}");
-                outputFile.WriteLine($"textureWidth={param.textureWidth}");
-                outputFile.WriteLine($"textureHeight={param.textureHeight}");
-                outputFile.WriteLine($"fov={param.fov}");
-                outputFile.WriteLine($"fps={param.fps}");
-                outputFile.WriteLine($"focal_length={param.focal_length}");
-                outputFile.WriteLine($"ipd={param.ipd}");
+                using (StreamWriter outputFile = new StreamWriter(settingFilePath))
+                {
+                    outputFile.WriteLine($"usePhysicalCamera={param.usePhysicalCamera}");
+                    outputFile.WriteLine($"useDepthCameara={param.useDepthCameara}");
+                    outputFile.WriteLine($"useStereoCamera={param.useStereoCamera}");
+                    outputFile.WriteLine($"textureWidth={param.textureWidth}");
+                    outputFile.WriteLine($"textureHeight={param.textureHeight}");
+                    outputFile.WriteLine($"fov={param.fov}");
+                    outputFile.WriteLine($"fps={param.fps}");
+                    outputFile.WriteLine($"focal_length={param.focal_length}");
+                    outputFile.WriteLine($"ipd={param.ipd}");
+                }
+            }
+            catch(Exception e)
+            {
+                VirtualCVLog.LogE($"fail to save settings : {e}");
             }
         }
 

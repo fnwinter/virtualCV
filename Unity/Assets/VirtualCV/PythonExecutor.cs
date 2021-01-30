@@ -42,7 +42,7 @@ namespace VirtualCV
         /// <param name="scriptFile">python script file name, default is opencv.py</param>
         public void ExecutePython(string pythonScriptFile)
         {
-            Debug.Log("[virtualCV] Execute python script : " + pythonScriptFile);
+            VirtualCVLog.Log("Execute python script : " + pythonScriptFile);
             pythonProcess.StartInfo.FileName = pythonExe;
             pythonProcess.StartInfo.WorkingDirectory = pythonScriptPath;
             pythonProcess.StartInfo.Arguments = pythonScriptFile;
@@ -51,6 +51,11 @@ namespace VirtualCV
             pythonProcess.StartInfo.CreateNoWindow = true;
 
             pythonProcess.Start();
+        }
+
+        public void Terminate()
+        {
+            if (pythonProcess != null) pythonProcess.Close();
         }
     }
 }

@@ -8,40 +8,49 @@ using WebSocketSharp;
 using WebSocketSharp.Server;
 using UnityEngine;
 
-public class VirtualCVWebSocket
+namespace VirtualCV
 {
-    private Thread thread = null;
-    private static WebSocketServer webSocketServer = new WebSocketServer("ws://127.0.0.1:8090");
-    private static Data data = null;
-
-    public class Data : WebSocketBehavior
+    public class VirtualCVWebSocket
     {
-        public Data()
+        const string url = "ws://127.0.0.1";
+        static int port = 8090;
+
+        private Thread thread = null;
+        private static WebSocketServer webSocketServer = null;
+        private static Data data = null;
+
+        public class Data : WebSocketBehavior
         {
-            VirtualCVWebSocket.data = this;
+            public Data()
+            {
+                VirtualCVWebSocket.data = this;
+            }
+
+            protected override void OnMessage(MessageEventArgs e)
+            {
+
+            }
         }
 
-        protected override void OnMessage(MessageEventArgs e)
+        public static void WebSocketProc()
         {
-
+            VirtualCVLog.Log("Start WebSocket Server");
+ 
+            string serverURL = $"{url}:{port}";
+            webSocketServer = new WebSocketServer(serverURL);
+            webSocketServer.AddWebSocketService<Data>("/Data");
+            webSocketServer.Start();
         }
-    }
 
-    public static void WebSocketProc()
-    {
-        Debug.Log("Start WebSocket Server");
-        webSocketServer.AddWebSocketService<Data>("/Data");
-        webSocketServer.Start();
-    }
+        public static WebSocketServer getWebsocket()
+        {
+            return webSocketServer;
+        }
 
-    public static WebSocketServer getWebsocket()
-    {
-        return webSocketServer;
-    }
-
-    public void Initialize()
-    {
-        thread = new Thread(new ThreadStart(WebSocketProc));
-        thread.Start();
+        public void Initialize()
+        {
+            thread = new Thread(new ThreadStart(WebSocketProc));
+            thread.Start();
+        }
     }
 }
