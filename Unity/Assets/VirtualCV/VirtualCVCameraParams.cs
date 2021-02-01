@@ -17,5 +17,7 @@ namespace VirtualCV
         public int fps;
         public float focal_length;
         public float ipd;
+
+        public string python_script;
     }
 }

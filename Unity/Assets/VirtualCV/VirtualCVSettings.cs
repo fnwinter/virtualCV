@@ -35,6 +35,8 @@ namespace VirtualCV
                     if (line.Contains("fps")) param.fps = GetValue<int>(line);
                     if (line.Contains("focal_length")) param.focal_length = GetValue<float>(line);
                     if (line.Contains("ipd")) param.ipd = GetValue<float>(line);
+
+                    if (line.Contains("python_script")) param.python_script = GetValue<string>(line);
                 }
             }
             catch (Exception e)
@@ -71,6 +73,7 @@ namespace VirtualCV
                     outputFile.WriteLine($"fps={param.fps}");
                     outputFile.WriteLine($"focal_length={param.focal_length}");
                     outputFile.WriteLine($"ipd={param.ipd}");
+                    outputFile.WriteLine($"python_script={param.python_script}");
                 }
             }
             catch(Exception e)

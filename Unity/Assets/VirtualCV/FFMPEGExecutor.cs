@@ -12,35 +12,37 @@ namespace VirtualCV
     public class FFMPEGExecutor
     {
         private SysDiagnostics.Process ffmpegProcess = new SysDiagnostics.Process();
-        private string ffmpegPath = "";
+        private string ffmpegPath = Path.Combine(Application.streamingAssetsPath, "ffmpeg", "bin");
 
         public StreamWriter ffmpegStreamWriter = null;
+
+        const string URL = "udp://127.0.0.1";
+        private int Port = 8084;
         private int FPS = 60;
 
         public void Initialze()
         {
-            ffmpegPath = Path.Combine(Application.streamingAssetsPath, "ffmpeg", "bin");
             VirtualCVLog.Log("ffmpeg path : " + ffmpegPath);
         }
 
         public void ExecuteFFMPEG()
         {
             VirtualCVLog.Log("Execute ffmpeg");
-            string fps = string.Format("\"fps={0}\"", FPS);
+
             // libx264 : mpegts
             // jpg : mjpeg
             string[] ffmpegOptions =
             {
-            "-re",
-            "-stream_loop", "-1",
-            "-i", "pipe:",
-            "-c:v", "jpg",
-            "-vf", fps,
-            "-c:v", "mjpeg",
-            "-preset", "veryfast",
-            "-f", "mjpeg",
-            "udp://127.0.0.1:1234"
-        };
+                "-re",
+                "-stream_loop", "-1",
+                "-i", "pipe:",
+                "-c:v", "jpg",
+                "-vf", $"fps={FPS}",
+                "-c:v", "mjpeg",
+                "-preset", "veryfast",
+                "-f", "mjpeg",
+                $"{URL}:{Port}"
+            };
 
             ffmpegProcess.StartInfo.FileName = Path.Combine(ffmpegPath, "ffmpeg.exe");
             ffmpegProcess.StartInfo.Arguments = string.Join(" ", ffmpegOptions);

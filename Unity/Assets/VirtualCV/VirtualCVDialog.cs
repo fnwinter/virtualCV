@@ -13,15 +13,18 @@ namespace VirtualCV
 {
     public class VirtualCVDialog : EditorWindow
     {
-        private VirtualCVCameraParams param = (new VirtualCVSettings()).LoadSettings();
+        private static VirtualCVCameraParams param = (new VirtualCVSettings()).LoadSettings();
 
         private static string[] pythonFiles = GetPythonScripts();
+        private static int selectedPythonScript = 0;
 
         [MenuItem("virtualCV/Setup")]
         static void Init()
         {
-            VirtualCVDialog window = (VirtualCVDialog)EditorWindow.GetWindow(typeof(VirtualCVDialog));
+            selectedPythonScript = GetPythonScriptIndex(param.python_script);
 
+            VirtualCVDialog window = (VirtualCVDialog)EditorWindow.GetWindow(typeof(VirtualCVDialog));
+            window.titleContent.text = "virtualCV";
             window.Show();
         }
 
@@ -55,19 +58,33 @@ namespace VirtualCV
                 VirtualCVLog.Log("Settings saved");
                 new VirtualCVSettings().SaveSettings(param);
             }
-            GUILayout.Button("Apply to camera");
+            if (GUILayout.Button("Apply to camera"))
+            {
+                ApplyCamera();
+            }
 
             EditorGUILayout.Space();
 
-            int selected = 0;
-            selected = EditorGUILayout.Popup("Python script", selected, pythonFiles);
+            selectedPythonScript = EditorGUILayout.Popup("Python script", selectedPythonScript, pythonFiles);
             if (GUILayout.Button("Launch the script"))
             {
-                string fileName = pythonFiles[selected];
+                string fileName = pythonFiles[selectedPythonScript];
+                param.python_script = fileName;
                 PythonExecutor.getInstance().ExecutePython(fileName);
             }
         }
 
+        /// <summary>
+        /// Attach virtualCV camera to Unity main camera
+        /// </summary>
+        private void ApplyCamera()
+        {
+            GameObject emptyGameObjectPrefab = new GameObject();
+            Instantiate(emptyGameObjectPrefab, Vector3.one, Quaternion.identity);
+
+        }
+
+        #region Python script
         /// <summary>
         /// Get python script names
         /// </summary>
@@ -90,5 +107,18 @@ namespace VirtualCV
 
             return pythonFileList.ToArray();
         }
+
+        private static int GetPythonScriptIndex(string script)
+        {
+            for(int i = 0; i < pythonFiles.Length; i++)
+            {
+                if (pythonFiles[i] == script) return i;
+            }
+
+            VirtualCVLog.LogE("The python script does not exist");
+            return 0;
+        }
+
+        #endregion
     }
 }

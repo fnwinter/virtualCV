@@ -12,8 +12,8 @@ namespace VirtualCV
 {
     public class VirtualCVWebSocket
     {
-        const string url = "ws://127.0.0.1";
-        static int port = 8090;
+        const string URL = "ws://127.0.0.1";
+        static int Port = 8090;
 
         private Thread thread = null;
         private static WebSocketServer webSocketServer = null;
@@ -36,7 +36,7 @@ namespace VirtualCV
         {
             VirtualCVLog.Log("Start WebSocket Server");
  
-            string serverURL = $"{url}:{port}";
+            string serverURL = $"{URL}:{Port}";
             webSocketServer = new WebSocketServer(serverURL);
             webSocketServer.AddWebSocketService<Data>("/Data");
             webSocketServer.Start();
