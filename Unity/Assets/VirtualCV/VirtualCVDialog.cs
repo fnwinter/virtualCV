@@ -21,11 +21,15 @@ namespace VirtualCV
         [MenuItem("virtualCV/Setup")]
         static void Init()
         {
-            selectedPythonScript = GetPythonScriptIndex(param.python_script);
-
             VirtualCVDialog window = (VirtualCVDialog)EditorWindow.GetWindow(typeof(VirtualCVDialog));
             window.titleContent.text = "virtualCV";
             window.Show();
+        }
+
+        void Awake()
+        {
+            pythonFiles = GetPythonScripts();
+            selectedPythonScript = GetPythonScriptIndex(param.python_script);
         }
 
         void OnGUI()
@@ -66,12 +70,11 @@ namespace VirtualCV
             EditorGUILayout.Space();
 
             selectedPythonScript = EditorGUILayout.Popup("Python script", selectedPythonScript, pythonFiles);
+            param.python_script = pythonFiles[selectedPythonScript];
             if (GUILayout.Button("Launch the script"))
             {
-                string fileName = pythonFiles[selectedPythonScript];
-                param.python_script = fileName;
-                PythonExecutor.getInstance().ExecutePython(fileName);
-            }
+                PythonExecutor.getInstance().ExecutePython(param.python_script);
+            }            
         }
 
         /// <summary>
@@ -79,9 +82,10 @@ namespace VirtualCV
         /// </summary>
         private void ApplyCamera()
         {
-            GameObject emptyGameObjectPrefab = new GameObject();
-            Instantiate(emptyGameObjectPrefab, Vector3.one, Quaternion.identity);
-
+            GameObject prefabVirtualCV = Resources.Load("VirtualCVRig") as GameObject;
+            GameObject virtualCVRig = Instantiate(prefabVirtualCV);
+            virtualCVRig.transform.SetParent(Camera.main.transform);
+            virtualCVRig.name = "VirtualCVRig";
         }
 
         #region Python script
@@ -112,13 +116,13 @@ namespace VirtualCV
         {
             for(int i = 0; i < pythonFiles.Length; i++)
             {
+                Debug.Log($"{pythonFiles[i]} -> {script}");
                 if (pythonFiles[i] == script) return i;
             }
 
             VirtualCVLog.LogE("The python script does not exist");
             return 0;
         }
-
         #endregion
     }
 }

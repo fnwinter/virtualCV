@@ -20,5 +20,15 @@ namespace VirtualCV
         {
             LogError($"{TAG} {msg}");
         }
+
+        public static void LogW(string msg)
+        {
+            LogWarning($"{TAG} {msg}");
+        }
+
+        public static void LogA(string msg)
+        {
+            LogAssertion($"{TAG} {msg}");
+        }
     }
 }
