@@ -13,10 +13,9 @@ namespace VirtualCV
 {
     public class VirtualCVDialog : EditorWindow
     {
-        private static VirtualCVCameraParams param = (new VirtualCVSettings()).LoadSettings();
-
         private static string[] pythonFiles = GetPythonScripts();
         private static int selectedPythonScript = 0;
+        private VirtualCVCameraParams param = VirtualCVSettings.LoadSettings();
 
         [MenuItem("virtualCV/Setup")]
         static void Init()
@@ -24,12 +23,6 @@ namespace VirtualCV
             VirtualCVDialog window = (VirtualCVDialog)EditorWindow.GetWindow(typeof(VirtualCVDialog));
             window.titleContent.text = "virtualCV";
             window.Show();
-        }
-
-        void Awake()
-        {
-            pythonFiles = GetPythonScripts();
-            selectedPythonScript = GetPythonScriptIndex(param.python_script);
         }
 
         void OnGUI()
@@ -60,7 +53,7 @@ namespace VirtualCV
             if (GUILayout.Button("Save settings"))
             {
                 VirtualCVLog.Log("Settings saved");
-                new VirtualCVSettings().SaveSettings(param);
+                VirtualCVSettings.SaveSettings(param);
             }
             if (GUILayout.Button("Apply to camera"))
             {
@@ -69,6 +62,7 @@ namespace VirtualCV
 
             EditorGUILayout.Space();
 
+            selectedPythonScript = GetPythonScriptIndex(param.python_script);
             selectedPythonScript = EditorGUILayout.Popup("Python script", selectedPythonScript, pythonFiles);
             param.python_script = pythonFiles[selectedPythonScript];
             if (GUILayout.Button("Launch the script"))
@@ -85,6 +79,9 @@ namespace VirtualCV
             GameObject prefabVirtualCV = Resources.Load("VirtualCVRig") as GameObject;
             GameObject virtualCVRig = Instantiate(prefabVirtualCV);
             virtualCVRig.transform.SetParent(Camera.main.transform);
+            virtualCVRig.transform.localPosition = Vector3.zero;
+            virtualCVRig.transform.localRotation = Quaternion.identity;
+            virtualCVRig.transform.localScale = Vector3.one;
             virtualCVRig.name = "VirtualCVRig";
         }
 
@@ -116,7 +113,6 @@ namespace VirtualCV
         {
             for(int i = 0; i < pythonFiles.Length; i++)
             {
-                Debug.Log($"{pythonFiles[i]} -> {script}");
                 if (pythonFiles[i] == script) return i;
             }
 

@@ -13,12 +13,17 @@ namespace VirtualCV
     {
         const string settingFileName = "virtualCVSetting.ini";
 
-        private string settingFilePath = Path.Combine(Application.streamingAssetsPath, settingFileName);
+        private static string settingFilePath = Path.Combine(Application.streamingAssetsPath, settingFileName);
 
-        public VirtualCVCameraParams LoadSettings()
+        private static VirtualCVCameraParams param = new VirtualCVCameraParams();
+
+        public static VirtualCVCameraParams GetParam()
         {
-            VirtualCVCameraParams param = new VirtualCVCameraParams();
+            return param;
+        }
 
+        public static VirtualCVCameraParams LoadSettings()
+        {            
             try
             {
                 using (var sr = new StreamReader(settingFilePath))
@@ -58,8 +63,10 @@ namespace VirtualCV
             return param;
         }
 
-        public void SaveSettings(VirtualCVCameraParams param)
+        public static void SaveSettings(VirtualCVCameraParams _param)
         {
+            param = _param;
+
             try
             {
                 using (StreamWriter outputFile = new StreamWriter(settingFilePath))
@@ -88,7 +95,7 @@ namespace VirtualCV
         /// <typeparam name="T"></typeparam>
         /// <param name="line">string from setting file</param>
         /// <returns>value</returns>
-        private T GetValue<T>(string line)
+        internal static T GetValue<T>(string line)
         {
             int delimeter = line.IndexOf('=');
             string value = line.Substring(delimeter + 1);
