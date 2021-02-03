@@ -14,12 +14,14 @@ namespace VirtualCV
     public class VirtualCVDialog : EditorWindow
     {
         private static string[] pythonFiles = GetPythonScripts();
-        private static int selectedPythonScript = 0;
-        private VirtualCVCameraParams param = VirtualCVSettings.LoadSettings();
+
+        static private VirtualCVCameraParams param = VirtualCVSettings.LoadSettings();
 
         [MenuItem("virtualCV/Setup")]
         static void Init()
         {
+            param = VirtualCVSettings.LoadSettings();
+
             VirtualCVDialog window = (VirtualCVDialog)EditorWindow.GetWindow(typeof(VirtualCVDialog));
             window.titleContent.text = "virtualCV";
             window.Show();
@@ -62,13 +64,13 @@ namespace VirtualCV
 
             EditorGUILayout.Space();
 
-            selectedPythonScript = GetPythonScriptIndex(param.python_script);
+            int selectedPythonScript = GetPythonScriptIndex(param.python_script);
             selectedPythonScript = EditorGUILayout.Popup("Python script", selectedPythonScript, pythonFiles);
             param.python_script = pythonFiles[selectedPythonScript];
             if (GUILayout.Button("Launch the script"))
             {
                 PythonExecutor.getInstance().ExecutePython(param.python_script);
-            }            
+            }
         }
 
         /// <summary>
@@ -115,8 +117,6 @@ namespace VirtualCV
             {
                 if (pythonFiles[i] == script) return i;
             }
-
-            VirtualCVLog.LogE("The python script does not exist");
             return 0;
         }
         #endregion

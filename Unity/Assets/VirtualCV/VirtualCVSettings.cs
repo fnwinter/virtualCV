@@ -26,22 +26,25 @@ namespace VirtualCV
         {            
             try
             {
+                string line;
                 using (var sr = new StreamReader(settingFilePath))
                 {
-                    string line = sr.ReadLine();
-                    if (line.Contains("usePhysicalCamera")) param.usePhysicalCamera = GetValue<bool>(line);
-                    if (line.Contains("useDepthCameara")) param.useDepthCameara = GetValue<bool>(line);
-                    if (line.Contains("useStereoCamera")) param.useStereoCamera = GetValue<bool>(line);
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        if (line.Contains("usePhysicalCamera")) param.usePhysicalCamera = GetValue<bool>(line);
+                        if (line.Contains("useDepthCameara")) param.useDepthCameara = GetValue<bool>(line);
+                        if (line.Contains("useStereoCamera")) param.useStereoCamera = GetValue<bool>(line);
 
-                    if (line.Contains("textureWidth")) param.textureWidth = GetValue<int>(line);
-                    if (line.Contains("textureHeight")) param.textureWidth = GetValue<int>(line);
+                        if (line.Contains("textureWidth")) param.textureWidth = GetValue<int>(line);
+                        if (line.Contains("textureHeight")) param.textureWidth = GetValue<int>(line);
 
-                    if (line.Contains("fov")) param.fov = GetValue<int>(line);
-                    if (line.Contains("fps")) param.fps = GetValue<int>(line);
-                    if (line.Contains("focal_length")) param.focal_length = GetValue<float>(line);
-                    if (line.Contains("ipd")) param.ipd = GetValue<float>(line);
+                        if (line.Contains("fov")) param.fov = GetValue<int>(line);
+                        if (line.Contains("fps")) param.fps = GetValue<int>(line);
+                        if (line.Contains("focal_length")) param.focal_length = GetValue<float>(line);
+                        if (line.Contains("ipd")) param.ipd = GetValue<float>(line);
 
-                    if (line.Contains("python_script")) param.python_script = GetValue<string>(line);
+                        if (line.Contains("python_script")) param.python_script = GetValue<string>(line);
+                    }
                 }
             }
             catch (Exception e)
@@ -58,6 +61,7 @@ namespace VirtualCV
                 param.fps = 20;
                 param.focal_length = 1.0f;
                 param.ipd = 1.0f;
+                param.python_script = "opencv.py";
             }
 
             return param;

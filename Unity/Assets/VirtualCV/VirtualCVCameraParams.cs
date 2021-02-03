@@ -3,6 +3,8 @@
  * Licensed under the MIT License.
  */
 
+using UnityEngine;
+
 namespace VirtualCV
 {
     public class VirtualCVCameraParams
