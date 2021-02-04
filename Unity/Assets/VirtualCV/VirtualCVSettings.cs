@@ -99,7 +99,7 @@ namespace VirtualCV
         /// <typeparam name="T"></typeparam>
         /// <param name="line">string from setting file</param>
         /// <returns>value</returns>
-        internal static T GetValue<T>(string line)
+        private static T GetValue<T>(string line)
         {
             int delimeter = line.IndexOf('=');
             string value = line.Substring(delimeter + 1);

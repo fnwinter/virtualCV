@@ -19,10 +19,14 @@ namespace VirtualCV
         private string screenshotPath = "";
 
         private FFMPEGExecutor ffmpegExecutor = null;
-        private VirtualCVWebSocket socket = null;
 
         void Start()
         {
+            if (name == "VirtualCVCameraRight" && !VirtualCVSettings.GetParam().useStereoCamera)
+            {
+                return;
+            }
+
             VirtualCVLog.Log("VirtualCVCamera starts");
             cam = GetComponent<Camera>();
             cameraImage = new Texture2D(cam.targetTexture.width, cam.targetTexture.height, TextureFormat.RGB24, false);
@@ -33,11 +37,6 @@ namespace VirtualCV
             ffmpegExecutor = new FFMPEGExecutor();
             ffmpegExecutor.Initialze();
             ffmpegExecutor.ExecuteFFMPEG();
-
-            PythonExecutor.getInstance().ExecutePython("opencv.py");
-
-            socket = new VirtualCVWebSocket();
-            socket.Initialize();
         }
 
         // Update is called once per frame
