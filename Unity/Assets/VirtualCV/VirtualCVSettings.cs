@@ -38,7 +38,7 @@ namespace VirtualCV
                         if (line.Contains("textureWidth")) param.textureWidth = GetValue<int>(line);
                         if (line.Contains("textureHeight")) param.textureHeight = GetValue<int>(line);
 
-                        if (line.Contains("fov")) param.fov = GetValue<int>(line);
+                        if (line.Contains("fov")) param.fov = GetValue<float>(line);
                         if (line.Contains("fps")) param.fps = GetValue<int>(line);
                         if (line.Contains("focal_length")) param.focal_length = GetValue<float>(line);
                         if (line.Contains("ipd")) param.ipd = GetValue<float>(line);

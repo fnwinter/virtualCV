@@ -13,9 +13,9 @@ namespace VirtualCV
     {
         private SysDiagnostics.Process pythonProcess = new SysDiagnostics.Process();
 
-        internal const string pythonExe = "python.exe";
-        internal const string pythonPath = "python";
-        private string pythonScriptPath = Path.Combine(Application.streamingAssetsPath, pythonPath);
+        private const string pythonExe = "python.exe";
+        private const string pythonPath = "python";
+        private readonly string pythonScriptPath = Path.Combine(Application.streamingAssetsPath, pythonPath);
 
         private static PythonExecutor executor = null;
 

@@ -15,7 +15,7 @@ namespace VirtualCV
 
         public int textureWidth;
         public int textureHeight;
-        public int fov;
+        public float fov;
         public int fps;
         public float focal_length;
         public float ipd;

@@ -41,7 +41,7 @@ namespace VirtualCV
 
             EditorGUILayout.Space();
 
-            param.fov = EditorGUILayout.IntField("FOV", param.fov);
+            param.fov = EditorGUILayout.FloatField("Field of view", param.fov);
             param.fps = EditorGUILayout.IntField("FPS", param.fps);
             param.focal_length = EditorGUILayout.FloatField("Focal length", param.focal_length);
 
