@@ -27,20 +27,18 @@ namespace VirtualCV
             {
                 right = this.gameObject.transform.GetChild(1).gameObject;
                 rightCamera = right.GetComponent<Camera>();
+
+                float ipd = VirtualCVSettings.GetParam().ipd;
+                left.transform.localPosition.Set(0, - ipd / 2, 0);
+                right.transform.localPosition.Set(0, ipd / 2, 0);
             }
             else
             {
-
+                left.transform.localPosition.Set(0, 0, 0);
             }
 
             string pythonScript = VirtualCVSettings.GetParam().python_script;
             PythonExecutor.getInstance().ExecutePython(pythonScript);
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
         }
     }
 }

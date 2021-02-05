@@ -22,21 +22,42 @@ namespace VirtualCV
 
         void Start()
         {
-            if (name == "VirtualCVCameraRight" && !VirtualCVSettings.GetParam().useStereoCamera)
+            bool useStereo = VirtualCVSettings.GetParam().useStereoCamera;
+            bool isRightCamera = (name == "VirtualCVCameraRight");
+            if (isRightCamera && !useStereo)
             {
                 return;
             }
 
             VirtualCVLog.Log("VirtualCVCamera starts");
-            cam = GetComponent<Camera>();
-            cameraImage = new Texture2D(cam.targetTexture.width, cam.targetTexture.height, TextureFormat.RGB24, false);
+            setCamera();
+            setTexture();
 
             screenshotPath = Path.Combine(Application.dataPath, "..", "Screenshot");
             Directory.CreateDirectory(screenshotPath);
 
-            ffmpegExecutor = new FFMPEGExecutor();
+            int port = isRightCamera ? 9091 : 9090;
+            ffmpegExecutor = new FFMPEGExecutor(port);
             ffmpegExecutor.Initialze();
             ffmpegExecutor.ExecuteFFMPEG();
+        }
+
+        void setCamera()
+        {
+            cam = GetComponent<Camera>();
+
+            cam.fieldOfView = 60;
+            cam.usePhysicalProperties = false;
+            cam.focalLength = 50;
+        }
+
+        void setTexture()
+        {
+            // 640x480
+            int width = VirtualCVSettings.GetParam().textureWidth;
+            int height = VirtualCVSettings.GetParam().textureHeight;
+            cam.targetTexture.texelSize.Set(width, height);
+            cameraImage = new Texture2D(width, height, TextureFormat.RGB24, false);
         }
 
         // Update is called once per frame

@@ -1,9 +1,10 @@
 # Copyright (c) 2021 fnwinter@gmail.com All rights reserved.
 # Licensed under the MIT License.
 
-import websocket
-from websocket import create_connection
 import select
+import websocket
+
+from websocket import create_connection
 from threading import Thread
 
 class virtualCVSocket(Thread):

@@ -36,7 +36,7 @@ namespace VirtualCV
                         if (line.Contains("useStereoCamera")) param.useStereoCamera = GetValue<bool>(line);
 
                         if (line.Contains("textureWidth")) param.textureWidth = GetValue<int>(line);
-                        if (line.Contains("textureHeight")) param.textureWidth = GetValue<int>(line);
+                        if (line.Contains("textureHeight")) param.textureHeight = GetValue<int>(line);
 
                         if (line.Contains("fov")) param.fov = GetValue<int>(line);
                         if (line.Contains("fps")) param.fps = GetValue<int>(line);
@@ -59,7 +59,7 @@ namespace VirtualCV
                 param.textureHeight = 480;
                 param.fov = 60;
                 param.fps = 20;
-                param.focal_length = 1.0f;
+                param.focal_length = 50;
                 param.ipd = 1.0f;
                 param.python_script = "opencv.py";
             }

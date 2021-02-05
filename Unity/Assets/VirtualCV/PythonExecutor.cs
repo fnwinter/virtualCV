@@ -43,9 +43,12 @@ namespace VirtualCV
         public void ExecutePython(string pythonScriptFile)
         {
             VirtualCVLog.Log("Execute python script : " + pythonScriptFile);
+
+            string useStereo = VirtualCVSettings.GetParam().useStereoCamera ? "stereo" : "";
+
             pythonProcess.StartInfo.FileName = pythonExe;
             pythonProcess.StartInfo.WorkingDirectory = pythonScriptPath;
-            pythonProcess.StartInfo.Arguments = pythonScriptFile;
+            pythonProcess.StartInfo.Arguments = $"{pythonScriptFile} {useStereo}";
             pythonProcess.StartInfo.UseShellExecute = false;
             pythonProcess.StartInfo.RedirectStandardOutput = true;
             pythonProcess.StartInfo.CreateNoWindow = true;

@@ -17,8 +17,13 @@ namespace VirtualCV
         public StreamWriter ffmpegStreamWriter = null;
 
         const string URL = "udp://127.0.0.1";
-        private int Port = 8084;
+        private int Port = 9090;
         private int FPS = 60;
+
+        public FFMPEGExecutor(int _Port)
+        {
+            Port = _Port;
+        }
 
         public void Initialze()
         {

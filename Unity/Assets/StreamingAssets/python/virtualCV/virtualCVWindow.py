@@ -5,7 +5,9 @@ import tkinter as tk
 from .virtualCV import virtualCVFrame, virtualCVSocket
 
 class virtualCVWindow():
-    def __init__(self, frameCallback, dataCallback):
+    def __init__(self, argv, frameCallback, dataCallback):
+        print(argv)
+
         self.root = tk.Tk()
         self.root.title("virtualCV")
         self.root.geometry("650x490+0+0")

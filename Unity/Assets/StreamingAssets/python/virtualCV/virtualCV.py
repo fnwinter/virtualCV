@@ -34,7 +34,7 @@ class virtualCVFrame(tk.Frame):
         self.canvas.pack(fill=tk.BOTH, expand=True)
 
     def startCV(self):
-        self.capture = cv2.VideoCapture("udp://127.0.0.1:8084")
+        self.capture = cv2.VideoCapture("udp://127.0.0.1:9090")
         self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
         self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
         self.updateFrame()
