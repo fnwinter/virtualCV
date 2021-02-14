@@ -107,7 +107,6 @@ namespace VirtualCV
             {
                 ffmpegExecutor.ffmpegStreamWriter.BaseStream.Write(imageData, 0, imageData.Length);
             }
-
         }
 
         void TakeScreenshot()

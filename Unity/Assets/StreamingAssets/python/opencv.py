@@ -18,7 +18,7 @@ class openCVExample(virtualCVWindow):
         return dst1
 
     def recvData(self, data):
-        self.sendData("send data")
+        self.sendData("send data from python code")
 
 if __name__ == '__main__':
     example = openCVExample(sys.argv)

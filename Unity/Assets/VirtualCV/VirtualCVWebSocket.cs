@@ -10,6 +10,8 @@ using UnityEngine;
 
 namespace VirtualCV
 {
+    public delegate void OnReceiveMessage(string msg);
+
     public class VirtualCVWebSocket
     {
         const string URL = "ws://127.0.0.1";
@@ -21,6 +23,8 @@ namespace VirtualCV
 
         public class Data : WebSocketBehavior
         {
+            private OnReceiveMessage onReceive = null;
+
             public Data()
             {
                 VirtualCVWebSocket.data = this;
@@ -28,7 +32,19 @@ namespace VirtualCV
 
             protected override void OnMessage(MessageEventArgs e)
             {
+                string data = e.Data.ToString();
 
+                onReceive?.Invoke(data);
+            }
+
+            public void SendString(string data)
+            {
+                Send(data);
+            }
+
+            public void SetReceive(OnReceiveMessage _onReceive)
+            {
+                onReceive = _onReceive;
             }
         }
 
@@ -45,6 +61,11 @@ namespace VirtualCV
         public static WebSocketServer getWebsocket()
         {
             return webSocketServer;
+        }
+
+        public static Data getData()
+        {
+            return data;
         }
 
         public void Initialize()
