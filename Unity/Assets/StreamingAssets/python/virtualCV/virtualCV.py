@@ -3,6 +3,7 @@
 
 import cv2
 import tkinter as tk
+import numpy as np
 
 from .virtualCVSocket import virtualCVSocket
 
@@ -54,8 +55,9 @@ class virtualCVFrame(tk.Frame):
     def updateFrame(self):
         if self.capture and self.callback:
             ret, frame = self.capture.read()
+            copied_frame = np.copy(frame)
             if ret:
-                updated_frame = self.callback(frame)
+                updated_frame = self.callback(copied_frame)
 
             img = Image.fromarray(cv2.cvtColor(updated_frame, cv2.COLOR_BGR2RGBA))
             self.imgtk = ImageTk.PhotoImage(image=img)

@@ -18,7 +18,7 @@ namespace VirtualCV
 
         const string URL = "udp://127.0.0.1";
         private int Port = 9090;
-        private int FPS = 60;
+        private int FPS = 20;
 
         public FFMPEGExecutor(int _Port)
         {
