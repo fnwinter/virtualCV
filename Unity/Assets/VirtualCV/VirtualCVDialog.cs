@@ -69,7 +69,14 @@ namespace VirtualCV
             param.python_script = pythonFiles[selectedPythonScript];
             if (GUILayout.Button("Launch the script"))
             {
-                PythonExecutor.getInstance().ExecutePython(param.python_script);
+                if (Application.isPlaying)
+                {
+                    PythonExecutor.getInstance().ExecutePython(param.python_script);
+                }
+                else
+                {
+                    VirtualCVLog.LogE("It's able to run only when Unity is playing.");
+                }
             }
         }
 
@@ -78,6 +85,15 @@ namespace VirtualCV
         /// </summary>
         private void ApplyCamera()
         {
+            foreach (Transform child in Camera.main.transform)
+            {
+                if (child.name == "VirtualCVRig")
+                {
+                    VirtualCVLog.LogW("VirtualCVRig has already been applied");
+                    return;
+                }
+            }
+
             GameObject prefabVirtualCV = Resources.Load("VirtualCVRig") as GameObject;
             GameObject virtualCVRig = Instantiate(prefabVirtualCV);
             virtualCVRig.transform.SetParent(Camera.main.transform);
